@@ -40,7 +40,28 @@ int sc_main(int argc, char* argv[]) {
   xor4.inputs.bind(xor4_inputs);
   xor4.output.bind(xor4_out);
 
-
+  /* VCD */
+  sc_trace_file *vcd = sc_create_vcd_trace_file("xor");
+  vcd->set_time_unit(1.0,sc_time_unit::SC_NS);
+  sc_trace(vcd,a,"XorBase2.A");
+  sc_trace(vcd,b,"XorBase2.B");
+  sc_trace(vcd,o,"XorBase2.O");
+  for (auto& in : basew_inputs) {
+    std::string s = fmt::format("XorBaseW.{}",in.name());
+    sc_trace(vcd,in,s.c_str());
+  }
+  sc_trace(vcd,basew_out,"XorBaseW.basew_out");
+  for (auto& in : xor2_inputs) {
+    std::string s = fmt::format("Xor<2>.{}",in.name());
+    sc_trace(vcd,in,s.c_str());
+  }
+  sc_trace(vcd,xor2_out,"Xor<2>.xor2_out");
+  for (auto& in: xor4_inputs) {
+    std::string s = fmt::format("Xor<4>.{}",in.name());
+    sc_trace(vcd,in,s.c_str());
+  }
+  sc_trace(vcd,xor4_out,"Xor<4>.xor4_out");
+  
   /* XorBase2 */
   auto print_xor = [&](){
     std::string s = fmt::format("@ {:>5} :: {} (A: {}, B: {}, Out: {:>5})\n",
@@ -127,5 +148,6 @@ int sc_main(int argc, char* argv[]) {
     print_xor_w4();
   }
 
-return 0;
+  sc_close_vcd_trace_file(vcd);
+  return 0;
 }

@@ -3,9 +3,11 @@
 
 #include <systemc>
 #include <type_traits>
-#include <fmt/format.h>
+
+#include <logic_gates/nand/nand.h>
 using namespace sc_core;
 
+/*****************************   XorBase2   ***************************/
 class XorBase2 : public sc_module {
 public:
   sc_in<bool> a;
@@ -14,38 +16,42 @@ public:
 
   XorBase2(sc_module_name);
 private:
-  void do_xor();
-  void print_xor();
+  sc_vector<Nand<2>> nands;
+  sc_signal<bool> m_sig_nand0_nand1_nand2;
+  sc_signal<bool> m_sig_nand1_nand3;
+  sc_signal<bool> m_sig_nand2_nand3;
 };
-
-void XorBase2::print_xor() {
-  std::string s = fmt::format("@ {:>5} :: {} (A: {}, B: {}, Out: {:>5})\n",
-                              sc_time_stamp().to_string(),
-                              name(),
-                              static_cast<int>(a.read()),
-                              static_cast<int>(b.read()),
-                              o.read());
-//  std::cout << s;
-}
 
 XorBase2::XorBase2(sc_module_name name)
 : sc_module(name)
 , a{"a"}
 , b{"b"}
 , o{"o"}
+, nands{"NAnds",4}
+, m_sig_nand0_nand1_nand2{"NAnd0_NAnd1_NAnd2_signal"}
+, m_sig_nand1_nand3{"NAnd1_NAnd3_signal"}
+, m_sig_nand2_nand3{"NAnd2_NAnd3_signal"}
 {
-  SC_HAS_PROCESS(XorBase2);
-  SC_METHOD(do_xor);
-  sensitive << a << b;
+  nands[0].inputs[0](a);
+  nands[0].inputs[1](b);
+  nands[0].output(m_sig_nand0_nand1_nand2);
 
-  SC_METHOD(print_xor);
-  sensitive << o;
+  nands[1].inputs[0](a);
+  nands[1].inputs[1](m_sig_nand0_nand1_nand2);
+  nands[1].output(m_sig_nand1_nand3);
+
+  nands[2].inputs[0](m_sig_nand0_nand1_nand2);
+  nands[2].inputs[1](b);
+  nands[2].output(m_sig_nand2_nand3);
+  
+  nands[3].inputs[0](m_sig_nand1_nand3);
+  nands[3].inputs[1](m_sig_nand2_nand3);
+  nands[3].output(o);
 }
+/*****************************   XorBase2   ***************************/
 
-void XorBase2::do_xor() {
-  o.write(a.read() != b.read()); // != acts as XOR on booleans
-}
 
+/*****************************   XorBaseW   ***************************/
 template<int W>
 class XorBaseW : public sc_module {
 public:
@@ -80,33 +86,18 @@ XorBaseW<W>::XorBaseW(sc_module_name name)
   m_xors[W-2].o(output);
   static_assert(W > 2, "Module width must be greather than 1.");
 }
+/*****************************   XorBaseW   ***************************/
 
 
 
-
+/*******************************    Xor   *****************************/
 template <int W>
 class Xor : public std::conditional<(W>2),XorBaseW<W>,XorBase2>::type {
 public:
   sc_vector<sc_in<bool>> inputs;
   sc_out<bool> output;
   Xor(sc_module_name);
-  //private:
-  void print_this();
 };
-
-template<>
-void Xor<2>::print_this() {
-//  std::cout << a.read() << b.read() << o.read() << std::endl;
-}
-
-template<int W>
-void Xor<W>::print_this() {
-}
-/*template <int W>
-Xor<W>::Xor(sc_module_name name)
-: std::conditional<(W>2),XorBaseW<W>,XorBase2>::type(name)
-{
-}*/
 
 template <>
 Xor<2>::Xor(sc_module_name name)
@@ -117,11 +108,6 @@ Xor<2>::Xor(sc_module_name name)
   a(inputs[0]);
   b(inputs[1]);
   o(output);
-
-  SC_HAS_PROCESS(Xor);
-
-  SC_METHOD(print_this);
-  sensitive << a << b << o;
 }
 
 template <int W>
@@ -131,16 +117,8 @@ Xor<W>::Xor(sc_module_name name)
 , output{"output"} {
   XorBaseW<W>::inputs.bind(inputs);
   XorBaseW<W>::output.bind(output);
-  SC_HAS_PROCESS(Xor);
-  SC_METHOD(print_this);
 }
+/*******************************    Xor   *****************************/
 
-/*template<>
-void Xor<2>::print_this() {
-}
-
-template<int W>
-void Xor<W>::print_this() {
-}*/
 
 #endif // XOR_XOR_H_
