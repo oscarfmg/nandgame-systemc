@@ -15,9 +15,6 @@ public:
   FullAdder(sc_module_name);
 private:
   sc_vector<Nand<2>> nands;
-/*  sc_signal<bool> m_sig_nand0_nand1_nand2;
-  sc_signal<bool> m_sig_nand1_nand3;
-  sc_signal<bool> m_sig_nand2_nand3;*/
   sc_signal<bool> m_nand0_out, m_nand1_out, m_nand2_out, m_nand3_out;
   sc_signal<bool> m_nand4_out, m_nand5_out, m_nand6_out;
 };
