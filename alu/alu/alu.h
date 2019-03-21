@@ -1,5 +1,5 @@
 #ifndef ALU_ALU_H
-#define ALU_ALU_H_
+#define ALU_ALU_H
 
 #include <systemc>
 using namespace sc_core;
@@ -58,4 +58,4 @@ void Alu<W>::process() {
   output.write(out);
 }
 
-#endif // ALU_ALU_H_
+#endif // ALU_ALU_H
