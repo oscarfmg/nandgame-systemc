@@ -32,7 +32,7 @@ Ram<W_DATA,W_ADDR>::Ram(sc_module_name name)
   SC_HAS_PROCESS(Ram);
 
   SC_METHOD(clk_cb);
-  sensitive << clk.pos();
+  sensitive << clk.neg();
 }
 
 template<int W_DATA, int W_ADDR>
