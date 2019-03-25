@@ -2,6 +2,7 @@
 #define MEMORY_REGISTER_H_
 
 #include <systemc>
+#include "memory/dff/dff.h"
 using namespace sc_core;
 
 template <int W>
@@ -13,7 +14,7 @@ public:
   sc_out<sc_dt::sc_uint<W>> output;
   Register(sc_module_name);
 private:
-  void store_data();
+  Dff<W> m_dff;
 };
 
 template <int W>
@@ -23,17 +24,12 @@ Register<W>::Register(sc_module_name name)
   , data{"data"}
   , clk{"clk"}
   , output{"out"}
+  , m_dff{"dff"}
 {
-  SC_HAS_PROCESS(Register);
-  SC_METHOD(store_data);
-  sensitive << clk.neg();
-}
-
-template <int W>
-void Register<W>::store_data() {
-  if (store.read()) {
-    output.write(data.read());
-  }
+  m_dff.store(store);
+  m_dff.data(data);
+  m_dff.clk(clk);
+  m_dff.output(output);
 }
 
 #endif //MEMORY_REGISTER_H_
