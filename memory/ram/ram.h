@@ -3,6 +3,7 @@
 
 #include <systemc>
 #include <vector>
+#include <fmt/format.h>
 using namespace sc_core;
 
 template<int W_DATA, int W_ADDR>
@@ -13,7 +14,9 @@ public:
   sc_in<bool> st;
   sc_in<bool> clk;
   sc_out<sc_dt::sc_uint<W_DATA>> output;
+
   Ram(sc_module_name);
+  bool loadProgram(std::string path);
 private:
   void clk_cb();
   std::vector<sc_dt::sc_uint<W_DATA>> m_data;
@@ -32,7 +35,7 @@ Ram<W_DATA,W_ADDR>::Ram(sc_module_name name)
   SC_HAS_PROCESS(Ram);
 
   SC_METHOD(clk_cb);
-  sensitive << clk.neg();
+  sensitive << clk.pos();
 }
 
 template<int W_DATA, int W_ADDR>
@@ -48,6 +51,29 @@ void Ram<W_DATA, W_ADDR>::clk_cb() {
   }
   
   output.write ( data );
+}
+
+template <int W_DATA, int W_ADDR>
+bool Ram<W_DATA,W_ADDR>::loadProgram(std::string path) {
+  std::ifstream inFile{path};
+  if (!inFile.is_open()) {
+    std::cout << "Unable to open program file.\n";
+    return false;
+  }
+
+  std::string line;
+  sc_dt::sc_uint<W_DATA> data;
+  int _data;
+  int i = 0;
+
+  while ( inFile >> std::hex >> _data ) {
+    m_data[i++] = _data;
+    data = _data;
+  }
+  
+  inFile.close();
+  fmt::print("[{}] Loaded {} integers.\n",name(),i);
+  return true;
 }
 
 #endif // MEMORY_RAM_H_

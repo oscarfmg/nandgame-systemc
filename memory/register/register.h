@@ -26,7 +26,7 @@ Register<W>::Register(sc_module_name name)
 {
   SC_HAS_PROCESS(Register);
   SC_METHOD(store_data);
-  sensitive << clk.neg();
+  sensitive << clk.pos();
 }
 
 template <int W>
