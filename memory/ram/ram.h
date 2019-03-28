@@ -1,6 +1,7 @@
 #ifndef MEMORY_RAM_H_
 #define MEMORY_RAM_H_
 
+#include <fstream>
 #include <systemc>
 #include <vector>
 #include <fmt/format.h>
@@ -18,6 +19,7 @@ public:
   Ram(sc_module_name);
   bool loadProgram(std::string path);
 private:
+public: //TODO: temporal
   void clk_cb();
   std::vector<sc_dt::sc_uint<W_DATA>> m_data;
 };

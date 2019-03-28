@@ -19,7 +19,8 @@ public:
   sc_out<sc_dt::sc_uint<W>> D;
   sc_out<sc_dt::sc_uint<W>> RAM;
   CombinedMemory(sc_module_name);
-private:
+  //TODO: temporal
+public:
   Register<W> m_regA;
   Register<W> m_regD;
   Ram<W,W>    m_ram;
