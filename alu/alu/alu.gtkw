@@ -1,0 +1,40 @@
+[*]
+[*] GTKWave Analyzer v3.3.61 (w)1999-2014 BSI
+[*] Wed Mar 20 22:11:05 2019
+[*]
+[dumpfile] "/scratch/ofmendoz/sc/nandgame/alu/alu/alu.vcd"
+[dumpfile_mtime] "Wed Mar 20 22:06:10 2019"
+[dumpfile_size] 2744
+[savefile] "/scratch/ofmendoz/sc/nandgame/alu/alu/alu.gtkw"
+[timestart] 0
+[size] 1536 741
+[pos] -1 -1
+*-13.448395 31520 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 211
+[signals_width] 133
+[sst_expanded] 1
+[sst_vpaned_height] 197
+@28
+[color] 1
+SystemC.zx
+[color] 7
+SystemC.nx
+@29
+[color] 1
+SystemC.zy
+@28
+[color] 6
+SystemC.ny
+[color] 5
+SystemC.f
+[color] 4
+SystemC.no
+@22
+[color] 3
+SystemC.X[7:0]
+[color] 2
+SystemC.Y[7:0]
+[color] 1
+SystemC.output[7:0]
+[pattern_trace] 1
+[pattern_trace] 0

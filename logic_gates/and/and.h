@@ -26,6 +26,7 @@ And<W>::And(sc_module_name name)
 , m_nand{"NAnd"}
 , m_inv{"Not"}
 , inputs{"input",W}
+, output{"output"}
 , m_nand_inv_sig{"signal_nand_inv"}
 {
   m_nand.inputs(inputs);
